@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Name</title>
+  <meta name="description" content="Writer, developer, and curious person." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ── NAV ── -->
+  <nav>
+    <a href="/" class="nav-logo">Your Name</a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#writing">Writing</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#resume">Resume</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <div class="hero">
+    <div class="hero-bg">
+      <!-- Replace src with your own photo or a dark landscape image -->
+      <img
+        src="assets/hero.jpg"
+        alt="Hero background"
+        onerror="this.style.display='none'"
+      />
+    </div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Based in New York · Open to opportunities</p>
+      <h1>Writing, building,<br /><em>thinking out loud.</em></h1>
+      <p class="hero-sub">
+        I'm [Your Name] — a writer and developer interested in
+        [your interests here]. This is where I share my work.
+      </p>
+    </div>
+  </div>
+
+  <!-- ── ABOUT ── -->
+  <section id="about">
+    <p class="section-label fade-up">About</p>
+    <div class="about-grid fade-up">
+      <div class="about-text">
+        <p>
+          I'm a [writer / developer / researcher] with a focus on
+          [your area]. I care about [what you care about].
+        </p>
+        <p>
+          Previously at [Company / School]. I write about [topics],
+          build [kinds of projects], and occasionally [other thing you do].
+        </p>
+        <p>
+          When I'm not in front of a screen, I'm [hobby / interest].
+        </p>
+      </div>
+      <div class="about-meta">
+        <div class="meta-item">
+          <p class="meta-label">Location</p>
+          <p class="meta-value">New York, NY</p>
+        </div>
+        <div class="meta-item">
+          <p class="meta-label">Currently</p>
+          <p class="meta-value">[What you're working on right now]</p>
+        </div>
+        <div class="meta-item">
+          <p class="meta-label">Contact</p>
+          <p class="meta-value">
+            <a href="mailto:you@email.com" style="color: var(--accent);">you@email.com</a>
+          </p>
+        </div>
+        <div class="meta-item">
+          <p class="meta-label">Elsewhere</p>
+          <p class="meta-value">
+            <a href="https://twitter.com/" target="_blank" style="color:var(--accent); margin-right:16px;">Twitter</a>
+            <a href="https://github.com/" target="_blank" style="color:var(--accent); margin-right:16px;">GitHub</a>
+            <a href="https://linkedin.com/" target="_blank" style="color:var(--accent);">LinkedIn</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="full-divider"></div>
+
+  <!-- ── WRITING ── -->
+  <section id="writing">
+    <p class="section-label fade-up">Writing</p>
+    <h2 class="section-heading fade-up">Selected essays &amp; articles</h2>
+
+    <div class="writing-list fade-up">
+
+      <!-- Repeat this block for each piece of writing -->
+      <a href="pages/writing-1.html" class="writing-item">
+        <span class="writing-date">Jan 2025</span>
+        <span class="writing-title">Your Essay Title Goes Here</span>
+        <span class="writing-tag">Essay</span>
+      </a>
+
+      <a href="pages/writing-2.html" class="writing-item">
+        <span class="writing-date">Nov 2024</span>
+        <span class="writing-title">Another Piece You've Written</span>
+        <span class="writing-tag">Essay</span>
+      </a>
+
+      <a href="pages/writing-3.html" class="writing-item">
+        <span class="writing-date">Sep 2024</span>
+        <span class="writing-title">A Technical Article or Tutorial</span>
+        <span class="writing-tag">Technical</span>
+      </a>
+
+      <a href="pages/writing-4.html" class="writing-item">
+        <span class="writing-date">Jun 2024</span>
+        <span class="writing-title">Something You've Been Thinking About</span>
+        <span class="writing-tag">Notes</span>
+      </a>
+
+    </div>
+  </section>
+
+  <div class="full-divider"></div>
+
+  <!-- ── PROJECTS ── -->
+  <section id="projects">
+    <p class="section-label fade-up">Projects</p>
+    <h2 class="section-heading fade-up">Things I've built</h2>
+
+    <div class="projects-grid fade-up">
+
+      <!-- Repeat this block for each project -->
+      <div class="project-card">
+        <p class="project-number">01</p>
+        <h3 class="project-name">Project Name</h3>
+        <p class="project-desc">
+          One or two sentences describing what this project does and why
+          it matters. Keep it short and sharp.
+        </p>
+        <div class="project-tags">
+          <span class="tag">React</span>
+          <span class="tag">TypeScript</span>
+          <span class="tag">Open Source</span>
+        </div>
+        <a href="https://github.com/" target="_blank" class="project-link">
+          View project →
+        </a>
+      </div>
+
+      <div class="project-card">
+        <p class="project-number">02</p>
+        <h3 class="project-name">Another Project</h3>
+        <p class="project-desc">
+          A brief description of the second project. What problem does
+          it solve? What's interesting about it?
+        </p>
+        <div class="project-tags">
+          <span class="tag">Python</span>
+          <span class="tag">API</span>
+        </div>
+        <a href="https://github.com/" target="_blank" class="project-link">
+          View project →
+        </a>
+      </div>
+
+      <div class="project-card">
+        <p class="project-number">03</p>
+        <h3 class="project-name">Third Project</h3>
+        <p class="project-desc">
+          Description of your third project. What tech did you use?
+          What did you learn?
+        </p>
+        <div class="project-tags">
+          <span class="tag">Design</span>
+          <span class="tag">CSS</span>
+        </div>
+        <a href="https://github.com/" target="_blank" class="project-link">
+          View project →
+        </a>
+      </div>
+
+      <div class="project-card">
+        <p class="project-number">04</p>
+        <h3 class="project-name">Fourth Project</h3>
+        <p class="project-desc">
+          Another description here. You can have as many or as few
+          project cards as you need.
+        </p>
+        <div class="project-tags">
+          <span class="tag">Node.js</span>
+          <span class="tag">Database</span>
+        </div>
+        <a href="https://github.com/" target="_blank" class="project-link">
+          View project →
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="full-divider"></div>
+
+  <!-- ── RESUME ── -->
+  <section id="resume">
+    <p class="section-label fade-up">Resume</p>
+    <h2 class="section-heading fade-up">Experience</h2>
+
+    <div class="resume-section fade-up">
+
+      <!-- Repeat for each role -->
+      <div class="resume-role">
+        <p class="resume-period">2023 — Present</p>
+        <div>
+          <p class="resume-company">Company Name</p>
+          <h3 class="resume-title">Your Role / Job Title</h3>
+          <p class="resume-desc">
+            What you did here. Keep it to 1–2 sentences. Focus on
+            impact and outcomes rather than duties.
+          </p>
+        </div>
+      </div>
+
+      <div class="resume-role">
+        <p class="resume-period">2021 — 2023</p>
+        <div>
+          <p class="resume-company">Previous Company</p>
+          <h3 class="resume-title">Previous Role</h3>
+          <p class="resume-desc">
+            A brief description of what you accomplished. Numbers
+            and results are always compelling.
+          </p>
+        </div>
+      </div>
+
+      <div class="resume-role">
+        <p class="resume-period">2019 — 2021</p>
+        <div>
+          <p class="resume-company">Earlier Company or School</p>
+          <h3 class="resume-title">Earlier Role or Degree</h3>
+          <p class="resume-desc">
+            What you focused on or studied. Feel free to include
+            internships, freelance work, or academic roles.
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <a href="assets/resume.pdf" download class="resume-download fade-up">
+      Download full resume (PDF) ↓
+    </a>
+  </section>
+
+  <div class="full-divider"></div>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <span class="footer-name">Your Name</span>
+    <div class="footer-links">
+      <a href="https://twitter.com/" target="_blank">Twitter</a>
+      <a href="https://github.com/" target="_blank">GitHub</a>
+      <a href="https://linkedin.com/" target="_blank">LinkedIn</a>
+      <a href="mailto:you@email.com">Email</a>
+    </div>
+    <span class="footer-copy">© 2026</span>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
