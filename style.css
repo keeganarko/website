@@ -289,10 +289,10 @@ section {
 
 .meta-value { font-size: 14px; color: var(--text); font-weight: 300; }
 
-/* ── WRITING ── */
-.writing-list { display: flex; flex-direction: column; }
+/* ── BLOG ── */
+.blog-list { display: flex; flex-direction: column; }
 
-.writing-item {
+.blog-item {
   display: grid;
   grid-template-columns: 80px 1fr auto;
   gap: 32px;
@@ -304,17 +304,17 @@ section {
   text-decoration: none;
 }
 
-.writing-list:hover .writing-item { opacity: 0.3; }
-.writing-list:hover .writing-item:hover { opacity: 1; }
+.blog-list:hover .blog-item { opacity: 0.3; }
+.blog-list:hover .blog-item:hover { opacity: 1; }
 
-.writing-date {
+.blog-date {
   font-size: 10px;
   color: var(--text-dim);
   letter-spacing: 0.06em;
   font-weight: 400;
 }
 
-.writing-title {
+.blog-title {
   font-family: var(--font-display);
   font-size: 20px;
   font-weight: 400;
@@ -322,9 +322,9 @@ section {
   transition: color 0.2s;
 }
 
-.writing-item:hover .writing-title { color: var(--gold); }
+.blog-item:hover .blog-title { color: var(--gold); }
 
-.writing-tag {
+.blog-tag {
   font-size: 9px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -538,7 +538,7 @@ footer {
   section { padding: 80px 24px; }
   .about-grid { grid-template-columns: 1fr; gap: 40px; }
   .projects-grid { grid-template-columns: 1fr; }
-  .writing-item { grid-template-columns: 1fr; gap: 6px; }
+  .blog-item { grid-template-columns: 1fr; gap: 6px; }
   .resume-role { grid-template-columns: 1fr; gap: 8px; }
   footer { flex-direction: column; gap: 20px; text-align: center; }
   .footer-links { flex-wrap: wrap; justify-content: center; }
