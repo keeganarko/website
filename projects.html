@@ -4,84 +4,291 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Projects — Keegan</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* =========================================================
+       PROJECTS — "Drafting board" direction (light)
+       Each project is a plate on a blueprint surface. Cards tilt in
+       3D toward the cursor; technical annotations draw in on hover.
+       Edit content in <main>; duplicate a .plate block to add more.
+       ========================================================= */
+    :root {
+      --paper:  #eef2f7;   /* drafting surface          */
+      --card:   #ffffff;   /* plate / card              */
+      --ink:    #11233c;   /* primary text (navy ink)   */
+      --soft:   #5d6b7e;   /* secondary text            */
+      --line:   #c4d2e2;   /* hairlines                 */
+      --blue:   #2f6fed;   /* drafting blue accent      */
+      --signal: #e0533d;   /* annotation red            */
+      --gridmin: rgba(47,111,237,.05);
+      --gridmaj: rgba(47,111,237,.10);
+
+      --display: "Space Grotesk", system-ui, sans-serif;
+      --body:    "Inter", system-ui, sans-serif;
+      --mono:    "JetBrains Mono", ui-monospace, monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--paper);
+      color: var(--ink);
+      font-family: var(--body);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      /* blueprint grid: fine minor lines + bolder major lines */
+      background-image:
+        linear-gradient(var(--gridmin) 1px, transparent 1px),
+        linear-gradient(90deg, var(--gridmin) 1px, transparent 1px),
+        linear-gradient(var(--gridmaj) 1px, transparent 1px),
+        linear-gradient(90deg, var(--gridmaj) 1px, transparent 1px);
+      background-size: 28px 28px, 28px 28px, 140px 140px, 140px 140px;
+    }
+
+    /* ---------- crosshair cursor (desktop, on-theme) ---------- */
+    .crosshair { position: fixed; inset: 0; pointer-events: none; z-index: 60; opacity: 0; transition: opacity .3s ease; }
+    .crosshair span { position: absolute; background: rgba(47,111,237,.28); }
+    .crosshair .vx { width: 1px; top: 0; bottom: 0; }
+    .crosshair .hz { height: 1px; left: 0; right: 0; }
+    @media (hover: hover) and (pointer: fine) { body:hover .crosshair { opacity: 1; } }
+
+    /* ---------- NAV ---------- */
+    nav {
+      position: sticky; top: 0; z-index: 50;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px clamp(20px, 5vw, 64px);
+      background: rgba(238,242,247,.8); backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav-logo { font-family: var(--display); font-weight: 700; font-size: 1.15rem; color: var(--ink); text-decoration: none; letter-spacing: -.01em; }
+    .nav-links { list-style: none; display: flex; gap: clamp(14px, 3vw, 34px); align-items: center; }
+    .nav-links a { color: var(--soft); text-decoration: none; font-size: .92rem; font-weight: 500; transition: color .2s ease; }
+    .nav-links a:hover, .nav-links a.active { color: var(--ink); }
+    .nav-cta { font-family: var(--mono); font-size: .8rem !important; padding: 7px 13px; border: 1px solid var(--blue); border-radius: 7px; color: var(--blue) !important; }
+    .nav-cta:hover { background: var(--blue); color: #fff !important; }
+
+    /* ---------- HERO: title block ---------- */
+    header.hero {
+      max-width: 1080px; margin: 0 auto;
+      padding: clamp(56px, 11vh, 120px) clamp(20px, 5vw, 64px) clamp(30px, 5vh, 60px);
+      display: grid; grid-template-columns: 1fr auto; gap: 30px; align-items: end;
+    }
+    .eyebrow { font-family: var(--mono); font-size: .76rem; letter-spacing: .2em; text-transform: uppercase; color: var(--blue); margin-bottom: 16px; }
+    .hero h1 { font-family: var(--display); font-weight: 700; font-size: clamp(2.6rem, 8vw, 5rem); line-height: 1; letter-spacing: -.03em; }
+    .hero h1 em { font-style: normal; color: var(--blue); }
+    /* drafting title block (corner table) */
+    .titleblock { font-family: var(--mono); font-size: .72rem; border: 1px solid var(--ink); background: var(--card); }
+    .titleblock div { display: grid; grid-template-columns: 64px 1fr; border-bottom: 1px solid var(--line); }
+    .titleblock div:last-child { border-bottom: 0; }
+    .titleblock dt { padding: 7px 9px; color: var(--soft); border-right: 1px solid var(--line); }
+    .titleblock dd { padding: 7px 9px; color: var(--ink); }
+    @media (max-width: 720px) { header.hero { grid-template-columns: 1fr; } .titleblock { justify-self: start; } }
+
+    /* ---------- PLATE STACK ---------- */
+    .board { max-width: 1080px; margin: 0 auto; padding: clamp(20px,4vh,40px) clamp(20px, 5vw, 64px) 70px; }
+    .plate {
+      display: grid; grid-template-columns: 110px 1fr; gap: clamp(16px, 4vw, 40px);
+      align-items: start; padding: clamp(34px, 6vh, 70px) 0;
+    }
+    .plate-tab { font-family: var(--mono); padding-top: 6px; }
+    .plate-tab .pno { font-size: 1.05rem; color: var(--ink); font-weight: 600; }
+    .plate-tab .plabel { font-size: .66rem; letter-spacing: .16em; color: var(--soft); display: block; margin-top: 4px; }
+
+    /* tilt card */
+    .card-wrap { perspective: 1000px; }
+    .card {
+      position: relative; background: var(--card); border: 1px solid var(--line);
+      border-radius: 4px; padding: clamp(26px, 4vw, 46px);
+      transform-style: preserve-3d;
+      transition: transform .4s cubic-bezier(.2,.7,.3,1), box-shadow .4s ease, border-color .3s ease;
+      box-shadow: 0 1px 0 rgba(17,35,60,.04);
+      --mx: 50%; --my: 50%;
+    }
+    .card::after { /* cursor sheen */
+      content: ""; position: absolute; inset: 0; border-radius: 4px; pointer-events: none;
+      background: radial-gradient(420px circle at var(--mx) var(--my), rgba(47,111,237,.10), transparent 60%);
+      opacity: 0; transition: opacity .35s ease;
+    }
+    .card:hover { border-color: var(--blue); box-shadow: 0 26px 60px -28px rgba(47,111,237,.45); }
+    .card:hover::after { opacity: 1; }
+
+    /* corner brackets (drawn in on hover) */
+    .card .corner { position: absolute; width: 16px; height: 16px; border: 2px solid var(--blue); opacity: 0; transition: opacity .3s ease, transform .3s ease; }
+    .card .c-tl { top: 10px; left: 10px; border-right: 0; border-bottom: 0; transform: translate(6px,6px); }
+    .card .c-tr { top: 10px; right: 10px; border-left: 0; border-bottom: 0; transform: translate(-6px,6px); }
+    .card .c-bl { bottom: 10px; left: 10px; border-right: 0; border-top: 0; transform: translate(6px,-6px); }
+    .card .c-br { bottom: 10px; right: 10px; border-left: 0; border-top: 0; transform: translate(-6px,-6px); }
+    .card:hover .corner { opacity: 1; transform: translate(0,0); }
+
+    /* annotation tag (slides in on hover) */
+    .annot {
+      position: absolute; top: 18px; right: 18px; font-family: var(--mono);
+      font-size: .68rem; letter-spacing: .1em; color: var(--signal);
+      border: 1px dashed var(--signal); padding: 3px 8px; border-radius: 3px;
+      opacity: 0; transform: translateX(8px); transition: all .3s ease;
+    }
+    .card:hover .annot { opacity: 1; transform: translateX(0); }
+
+    .card-name { font-family: var(--display); font-weight: 600; font-size: clamp(1.6rem, 4vw, 2.4rem); line-height: 1.05; letter-spacing: -.02em; margin-bottom: 14px; }
+    .card-desc { color: var(--soft); max-width: 58ch; margin-bottom: 22px; }
+    .card-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+    .tag { font-family: var(--mono); font-size: .72rem; color: var(--soft); padding: 4px 11px; border: 1px solid var(--line); border-radius: 999px; transition: all .25s ease; }
+    .card:hover .tag { border-color: var(--blue); color: var(--blue); }
+    .card-link { font-family: var(--mono); font-size: .84rem; color: var(--blue); text-decoration: none; display: inline-flex; gap: 8px; align-items: center; }
+    .card-link .arrow { transition: transform .25s ease; }
+    .card:hover .card-link .arrow { transform: translateX(6px); }
+    .card-link:hover { color: var(--signal); }
+
+    @media (max-width: 600px) { .plate { grid-template-columns: 1fr; gap: 8px; } .plate-tab { padding-top: 0; } }
+
+    /* ---------- FOOTER ---------- */
+    footer { border-top: 1px solid var(--line); max-width: 1080px; margin: 0 auto; padding: 38px clamp(20px, 5vw, 64px); display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between; }
+    .footer-name { font-family: var(--display); font-weight: 600; }
+    .footer-links { display: flex; gap: 22px; }
+    .footer-links a { color: var(--soft); text-decoration: none; font-size: .9rem; transition: color .2s ease; }
+    .footer-links a:hover { color: var(--blue); }
+    .footer-copy { font-family: var(--mono); font-size: .78rem; color: var(--soft); }
+
+    /* ---------- reveal + a11y ---------- */
+    .reveal { opacity: 0; transform: translateY(22px); transition: opacity .6s ease, transform .6s ease; }
+    .reveal.in { opacity: 1; transform: none; }
+    a:focus-visible { outline: 2px solid var(--blue); outline-offset: 4px; border-radius: 4px; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, .card { transition: none !important; animation: none !important; }
+      .reveal { opacity: 1; transform: none; }
+      .crosshair { display: none; }
+    }
+  </style>
+  <script src="nav.js" defer></script>
 </head>
 <body>
-  <nav>
-    <a href="index.html" class="nav-logo">Keegan</a>
-    <ul class="nav-links">
-      <li><a href="about.html">About</a></li>
-      <li><a href="writing.html">Writing</a></li>
-      <li><a href="projects.html">Projects</a></li>
-      <li><a href="resume.html">Resume</a></li>
-      <li><a href="mailto:you@email.com" class="nav-cta">Say hello</a></li>
-    </ul>
-  </nav>
+  <div class="crosshair" aria-hidden="true"><span class="vx"></span><span class="hz"></span></div>
 
-  <div class="page">
-    <p class="section-label fade-up">Projects</p>
-    <h1 class="section-heading fade-up">Things I've built</h1>
+  <site-nav></site-nav>
 
-    <div class="projects-grid fade-up">
-      <div class="project-card">
-        <p class="project-number">01</p>
-        <h3 class="project-name">Project Name</h3>
-        <p class="project-desc">One or two sentences describing what this project does and why it matters. Keep it short and sharp.</p>
-        <div class="project-tags">
-          <span class="tag">React</span>
-          <span class="tag">TypeScript</span>
-          <span class="tag">Open Source</span>
-        </div>
-        <a href="https://github.com/" target="_blank" class="project-link">View project →</a>
-      </div>
-
-      <div class="project-card">
-        <p class="project-number">02</p>
-        <h3 class="project-name">Another Project</h3>
-        <p class="project-desc">A brief description of the second project. What problem does it solve? What's interesting about it?</p>
-        <div class="project-tags">
-          <span class="tag">Python</span>
-          <span class="tag">API</span>
-        </div>
-        <a href="https://github.com/" target="_blank" class="project-link">View project →</a>
-      </div>
-
-      <div class="project-card">
-        <p class="project-number">03</p>
-        <h3 class="project-name">Third Project</h3>
-        <p class="project-desc">Description of your third project. What tech did you use? What did you learn building it?</p>
-        <div class="project-tags">
-          <span class="tag">Design</span>
-          <span class="tag">CSS</span>
-        </div>
-        <a href="https://github.com/" target="_blank" class="project-link">View project →</a>
-      </div>
-
-      <div class="project-card">
-        <p class="project-number">04</p>
-        <h3 class="project-name">Fourth Project</h3>
-        <p class="project-desc">Another description here. Add as many cards as you need — the grid handles them automatically.</p>
-        <div class="project-tags">
-          <span class="tag">Node.js</span>
-          <span class="tag">Database</span>
-        </div>
-        <a href="https://github.com/" target="_blank" class="project-link">View project →</a>
-      </div>
+  <!-- ============ HERO / TITLE BLOCK ============ -->
+  <header class="hero">
+    <div>
+      <p class="eyebrow reveal">Drawing set — 2026</p>
+      <h1 class="reveal">Things <em>I've</em> built</h1>
     </div>
-  </div>
+    <dl class="titleblock reveal">
+      <div><dt>SET</dt><dd>Selected work</dd></div>
+      <div><dt>PLATES</dt><dd>04</dd></div>
+      <div><dt>FOCUS</dt><dd>AI / ML · Platform</dd></div>
+      <div><dt>REV.</dt><dd>Jun 2026</dd></div>
+    </dl>
+  </header>
+
+  <!-- ============ PLATE STACK ============ -->
+  <main class="board">
+
+    <section class="plate reveal">
+      <div class="plate-tab"><span class="pno">01</span><span class="plabel">PLATE</span></div>
+      <div class="card-wrap">
+        <article class="card" data-tilt>
+          <span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
+          <span class="annot">FIG. 01</span>
+          <h3 class="card-name">Project Name</h3>
+          <p class="card-desc">One or two sentences describing what this project does and why it matters. Lead with the problem solved or the outcome driven.</p>
+          <div class="card-tags"><span class="tag">React</span><span class="tag">TypeScript</span><span class="tag">Open Source</span></div>
+          <a href="https://github.com/keeganarko" target="_blank" rel="noopener" class="card-link">View project <span class="arrow">→</span></a>
+        </article>
+      </div>
+    </section>
+
+    <section class="plate reveal">
+      <div class="plate-tab"><span class="pno">02</span><span class="plabel">PLATE</span></div>
+      <div class="card-wrap">
+        <article class="card" data-tilt>
+          <span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
+          <span class="annot">FIG. 02</span>
+          <h3 class="card-name">Another Project</h3>
+          <p class="card-desc">A brief description of the second project. What problem does it solve? What's the interesting technical or product decision behind it?</p>
+          <div class="card-tags"><span class="tag">Python</span><span class="tag">API</span></div>
+          <a href="https://github.com/keeganarko" target="_blank" rel="noopener" class="card-link">View project <span class="arrow">→</span></a>
+        </article>
+      </div>
+    </section>
+
+    <section class="plate reveal">
+      <div class="plate-tab"><span class="pno">03</span><span class="plabel">PLATE</span></div>
+      <div class="card-wrap">
+        <article class="card" data-tilt>
+          <span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
+          <span class="annot">FIG. 03</span>
+          <h3 class="card-name">Third Project</h3>
+          <p class="card-desc">Description of your third project. What tech did you use, and what did you learn building it?</p>
+          <div class="card-tags"><span class="tag">Design</span><span class="tag">CSS</span></div>
+          <a href="https://github.com/keeganarko" target="_blank" rel="noopener" class="card-link">View project <span class="arrow">→</span></a>
+        </article>
+      </div>
+    </section>
+
+    <section class="plate reveal">
+      <div class="plate-tab"><span class="pno">04</span><span class="plabel">PLATE</span></div>
+      <div class="card-wrap">
+        <article class="card" data-tilt>
+          <span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
+          <span class="annot">FIG. 04</span>
+          <h3 class="card-name">Fourth Project</h3>
+          <p class="card-desc">Copy a .plate block to add another. Update the plate number and FIG. label — the tilt and reveal effects wire up automatically.</p>
+          <div class="card-tags"><span class="tag">Node.js</span><span class="tag">Database</span></div>
+          <a href="https://github.com/keeganarko" target="_blank" rel="noopener" class="card-link">View project <span class="arrow">→</span></a>
+        </article>
+      </div>
+    </section>
+
+  </main>
 
   <footer>
-    <span class="footer-name">Keegan</span>
+    <span class="footer-name">Keegan Choudhury</span>
     <div class="footer-links">
-      <a href="https://twitter.com/" target="_blank">Twitter</a>
-      <a href="https://github.com/" target="_blank">GitHub</a>
-      <a href="https://linkedin.com/" target="_blank">LinkedIn</a>
-      <a href="mailto:you@email.com">Email</a>
+      <a href="https://twitter.com/" target="_blank" rel="noopener">Twitter</a>
+      <a href="https://github.com/keeganarko" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://linkedin.com/in/keeganarko/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="mailto:keeganarko@email.com">Email</a>
     </div>
     <span class="footer-copy">© 2026</span>
   </footer>
-  <script src="main.js"></script>
+
+  <script>
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // scroll reveal
+    const io = new IntersectionObserver((es) => {
+      es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    if (!reduce && matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      // 3D cursor tilt
+      document.querySelectorAll('[data-tilt]').forEach(card => {
+        card.addEventListener('pointermove', e => {
+          const r = card.getBoundingClientRect();
+          const px = (e.clientX - r.left) / r.width;
+          const py = (e.clientY - r.top) / r.height;
+          card.style.transform = `rotateX(${(0.5 - py) * 7}deg) rotateY(${(px - 0.5) * 9}deg) translateY(-3px)`;
+          card.style.setProperty('--mx', px * 100 + '%');
+          card.style.setProperty('--my', py * 100 + '%');
+        });
+        card.addEventListener('pointerleave', () => { card.style.transform = ''; });
+      });
+
+      // crosshair cursor
+      const cx = document.querySelector('.crosshair');
+      const vx = cx.querySelector('.vx'), hz = cx.querySelector('.hz');
+      window.addEventListener('pointermove', e => {
+        vx.style.left = e.clientX + 'px';
+        hz.style.top  = e.clientY + 'px';
+      });
+    }
+  </script>
 </body>
 </html>
