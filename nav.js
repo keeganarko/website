@@ -12,7 +12,7 @@
   // ---- edit your menu here ----
   const LINKS = [
     { label: 'About',    href: 'about.html'    },
-    { label: 'Writing',  href: 'blog.html'     },
+    { label: 'Blog',  href: 'blog.html'     },
     { label: 'Projects', href: 'projects.html' },
     { label: 'Resume',   href: 'resume.html'   },
   ];
